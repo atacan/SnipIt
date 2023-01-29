@@ -61,15 +61,16 @@ extension Snippetable {
         let snippetType = type(of: input)
 
         dump(input.placeHoldersNumbered())
-        input.placeHoldersNumbered().forEach { key, value in
-            let pattern =
-                snippetType.placeholderStartPattern + "\(key)" + snippetType.placeholderEndPattern
-            // replace the regex matched placeholders with ${n:placeholder}
-            formattedString.replaceMatches(
-                of: pattern,
-                with: Self.placeholderStartPattern + "\(key)" + Self.placeholderEndPattern
-            )
-        }
+        input.placeHoldersNumbered()
+            .forEach { key, value in
+                let pattern =
+                    snippetType.placeholderStartPattern + "\(key)" + snippetType.placeholderEndPattern
+                // replace the regex matched placeholders with ${n:placeholder}
+                formattedString.replaceMatches(
+                    of: pattern,
+                    with: Self.placeholderStartPattern + "\(key)" + Self.placeholderEndPattern
+                )
+            }
         return formattedString
     }
 }

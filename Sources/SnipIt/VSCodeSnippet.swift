@@ -23,7 +23,9 @@ public struct VSCodeSnippet: Codable, Snippetable {
         "\(placeholderStartPattern)\\w+\(placeholderEndPattern)"
     }
 
-    public init(from xcode: XCodeSnippet) {
+    public init(
+        from xcode: XCodeSnippet
+    ) {
         name = xcode.IDECodeSnippetTitle
         content = Content(
             prefix: xcode.IDECodeSnippetCompletionPrefix,
@@ -33,7 +35,9 @@ public struct VSCodeSnippet: Codable, Snippetable {
         content.body = bodyFrom(input: xcode).components(separatedBy: .newlines)
     }
 
-    public init(from intellij: IntelliJSnippet) {
+    public init(
+        from intellij: IntelliJSnippet
+    ) {
         name = intellij.name
         content = Content(
             prefix: intellij.name,
@@ -54,17 +58,18 @@ public struct VSCodeSnippet: Codable, Snippetable {
         // loop through all the placeholders and replace them with ${n:placeholder}.
         var formattedString = input.body
         let snippetType = type(of: input)
-        
+
         dump(input.placeHoldersNumbered())
-        input.placeHoldersNumbered().forEach { key, value in
-            let pattern =
-                snippetType.placeholderStartPattern + "\(key)" + snippetType.placeholderEndPattern
-            // replace the regex matched placeholders with ${n:placeholder}
-            formattedString.replaceMatches(
-                of: pattern,
-                with: "${\(value):\(key)}"
-            )
-        }
+        input.placeHoldersNumbered()
+            .forEach { key, value in
+                let pattern =
+                    snippetType.placeholderStartPattern + "\(key)" + snippetType.placeholderEndPattern
+                // replace the regex matched placeholders with ${n:placeholder}
+                formattedString.replaceMatches(
+                    of: pattern,
+                    with: "${\(value):\(key)}"
+                )
+            }
         return formattedString
     }
 }

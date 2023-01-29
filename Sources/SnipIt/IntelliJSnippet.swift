@@ -21,19 +21,28 @@ public struct IntelliJSnippet: Snippetable {
     var description: String
     var value: String
 
-    init(attributes attributeDict: [String: String]) {
+    init(
+        attributes attributeDict: [String: String]
+    ) {
         name = attributeDict["name"] ?? ""
         description = attributeDict["description"] ?? ""
         value = attributeDict["value"] ?? ""
     }
 
-    init(name: String, description: String, value: String, scope _: [String] = []) {
+    init(
+        name: String,
+        description: String,
+        value: String,
+        scope _: [String] = []
+    ) {
         self.name = name
         self.description = description
         self.value = value
     }
 
-    init(templateXMLIndexer: XMLIndexer) {
+    init(
+        templateXMLIndexer: XMLIndexer
+    ) {
         name = templateXMLIndexer.element?.attribute(by: "name")?.text ?? ""
         description = templateXMLIndexer.element?.attribute(by: "description")?.text ?? ""
         value = templateXMLIndexer.element?.attribute(by: "value")?.text ?? ""

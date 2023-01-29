@@ -20,13 +20,15 @@ public struct XCodeSnippet: Decodable, Snippetable {
         "\(XCodeSnippet.placeholderStartPattern)(.*?)\(XCodeSnippet.placeholderEndPattern)"
     }
 
-    public init(plist: String) throws {
+    public init(
+        plist: String
+    ) throws {
         guard let data = plist.data(using: .utf8) else { throw ConverterError.stringToData }
         let decoder = PropertyListDecoder()
         let snippet = try decoder.decode(XCodeSnippet.self, from: data)
         self = snippet
     }
-    
+
     public func output() -> String {
         """
         <?xml version="1.0" encoding="UTF-8"?>
