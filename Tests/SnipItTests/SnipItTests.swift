@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import SnipIt
 
 final class SnipItTests: XCTestCase {

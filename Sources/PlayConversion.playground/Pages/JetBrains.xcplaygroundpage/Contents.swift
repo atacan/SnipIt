@@ -12,24 +12,24 @@ let currentDirectoryPath = fileManager.currentDirectoryPath
 // let liveTemplateXML = try String(contentsOfFile: liveTemplateFilePath, encoding: .utf8)
 
 let liveTemplateXML = """
-<templateSet group="es6">
-  <template name="v" value="var $name$;" description="Declarations: var statement" toReformat="false" toShortenFQNames="true">
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
-    <context>
-      <option name="JAVA_SCRIPT" value="true" />
-      <option name="TypeScript" value="true" />
-    </context>
-  </template>
-  <template name="ve" value="var $name$ = $value$;" description="Declarations: var assignment" toReformat="false" toShortenFQNames="true">
-    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
-    <variable name="value" expression="" defaultValue="" alwaysStopAt="true" />
-    <context>
-      <option name="JAVA_SCRIPT" value="true" />
-      <option name="TypeScript" value="true" />
-    </context>
-  </template>
-</templateSet>
-"""
+    <templateSet group="es6">
+      <template name="v" value="var $name$;" description="Declarations: var statement" toReformat="false" toShortenFQNames="true">
+        <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+          <option name="JAVA_SCRIPT" value="true" />
+          <option name="TypeScript" value="true" />
+        </context>
+      </template>
+      <template name="ve" value="var $name$ = $value$;" description="Declarations: var assignment" toReformat="false" toShortenFQNames="true">
+        <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+        <variable name="value" expression="" defaultValue="" alwaysStopAt="true" />
+        <context>
+          <option name="JAVA_SCRIPT" value="true" />
+          <option name="TypeScript" value="true" />
+        </context>
+      </template>
+    </templateSet>
+    """
 
 // Write to file
 // let vscodeSnippetFile = "vscodeSnippets.json"
@@ -42,7 +42,9 @@ struct LiveTemplate {
     var value: String
     var scope: [String] = []
 
-    init(attributes attributeDict: [String: String]) {
+    init(
+        attributes attributeDict: [String: String]
+    ) {
         name = attributeDict["name"] ?? ""
         description = attributeDict["description"] ?? ""
         value = attributeDict["value"] ?? ""
@@ -60,29 +62,41 @@ class LiveTemplateXMLParserDelegate: NSObject, XMLParserDelegate {
     var templates = [LiveTemplate]()
     var currentTemplate: LiveTemplate?
 
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String: String] = [:]) {
+    func parser(
+        _ parser: XMLParser,
+        didStartElement elementName: String,
+        namespaceURI: String?,
+        qualifiedName qName: String?,
+        attributes attributeDict: [String: String] = [:]
+    ) {
         if elementName == "template" {
             currentTemplate = LiveTemplate(attributes: attributeDict)
             isTemplate = true
-        } else if elementName == "option" {
+        }
+        else if elementName == "option" {
             if let value = attributeDict["value"],
-               value == "true",
-               let name = attributeDict["name"]
+                value == "true",
+                let name = attributeDict["name"]
             {
                 currentTemplate?.scope.append(name)
             }
-//            print(attributeDict)
+            //            print(attributeDict)
             isName = true
         }
     }
 
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-//        if isTemplate {
-//            print("faksljalkfj", string)
-//        }
+        //        if isTemplate {
+        //            print("faksljalkfj", string)
+        //        }
     }
 
-    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(
+        _ parser: XMLParser,
+        didEndElement elementName: String,
+        namespaceURI: String?,
+        qualifiedName qName: String?
+    ) {
         if elementName == "template" {
             templates.append(currentTemplate!)
             currentTemplate = nil
@@ -101,12 +115,12 @@ liveTemplateParser.parse()
 var vscodeSnippets = ""
 for template in liveTemplateDelegate.templates {
     vscodeSnippets += """
-    \"\(template.name)\": {
-        \"prefix\": \"\(template.name)\",
-        \"body\": [\(template.value)],
-        \"description\": \"\(template.description)\"
-    },\n
-    """
+        \"\(template.name)\": {
+            \"prefix\": \"\(template.name)\",
+            \"body\": [\(template.value)],
+            \"description\": \"\(template.description)\"
+        },\n
+        """
 }
 
 let snippets = intellijParser(liveTemplateXML: liveTemplateXML)
@@ -114,6 +128,6 @@ let snippets = intellijParser(liveTemplateXML: liveTemplateXML)
 dump(snippets)
 print(snippets[1].output())
 //dump(snippets.map({$0.placeHoldersNumbered()}))
-print(snippets.map{VSCodeSnippet(from: $0).output()}.joined(separator: ",\n\n"))
+print(snippets.map { VSCodeSnippet(from: $0).output() }.joined(separator: ",\n\n"))
 
 //: [Next](@next)
