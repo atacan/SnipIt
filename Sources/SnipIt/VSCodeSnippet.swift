@@ -62,8 +62,7 @@ public struct VSCodeSnippet: Codable, Snippetable {
         dump(input.placeHoldersNumbered())
         input.placeHoldersNumbered()
             .forEach { key, value in
-                let pattern =
-                    snippetType.placeholderStartPattern + "\(key)" + snippetType.placeholderEndPattern
+                let pattern = snippetType.placeholderStartPattern + "\(key)" + snippetType.placeholderEndPattern
                 // replace the regex matched placeholders with ${n:placeholder}
                 formattedString.replaceMatches(
                     of: pattern,
