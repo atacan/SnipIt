@@ -7,19 +7,24 @@ import SWXMLHash
 
 public struct IntelliJSnippet: Snippetable {
 
+    var name: String
+    var description: String
+    var value: String
+    var prefix: String { name }
+
     static var placeholderStartPattern: String = "\\$"
     static var placeholderEndPattern: String = "\\$"
     static var placeholderPattern: String {
         "\(IntelliJSnippet.placeholderStartPattern)(.*?)\(IntelliJSnippet.placeholderEndPattern)"
     }
 
+    func placeholderWith(name: String, index: Int) -> String {
+        Self.placeholderStartPattern + name + Self.placeholderEndPattern
+    }
+
     var body: String {
         value
     }
-
-    var name: String
-    var description: String
-    var value: String
 
     init(
         attributes attributeDict: [String: String]

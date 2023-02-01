@@ -5,13 +5,30 @@
 import Foundation
 
 public struct XCodeSnippet: Decodable, Snippetable {
-    let IDECodeSnippetCompletionPrefix: String
-    let IDECodeSnippetContents: String
-    let IDECodeSnippetSummary: String
-    let IDECodeSnippetTitle: String
+    var IDECodeSnippetCompletionPrefix: String
+    var IDECodeSnippetContents: String
+    var IDECodeSnippetSummary: String
+    var IDECodeSnippetTitle: String
 
+    var name: String {
+        get { IDECodeSnippetTitle }
+        set { IDECodeSnippetTitle = newValue }
+    }
+    var prefix: String {
+        get { IDECodeSnippetCompletionPrefix }
+        set { IDECodeSnippetCompletionPrefix = newValue }
+    }
+    var description: String {
+        get { IDECodeSnippetSummary }
+        set { IDECodeSnippetSummary = newValue }
+    }
     var body: String {
-        IDECodeSnippetContents
+        get { IDECodeSnippetContents }
+        set { IDECodeSnippetContents = newValue }
+    }
+
+    func placeholderWith(name: String, index: Int) -> String {
+        Self.placeholderStartPattern + name + Self.placeholderEndPattern
     }
 
     static let placeholderStartPattern: String = "<#"
@@ -27,6 +44,26 @@ public struct XCodeSnippet: Decodable, Snippetable {
         let decoder = PropertyListDecoder()
         let snippet = try decoder.decode(XCodeSnippet.self, from: data)
         self = snippet
+    }
+
+    public init(
+        from intellij: IntelliJSnippet
+    ) throws {
+        IDECodeSnippetTitle = intellij.name
+        IDECodeSnippetSummary = intellij.description
+        IDECodeSnippetCompletionPrefix = intellij.name
+        IDECodeSnippetContents = ""
+        IDECodeSnippetContents = try bodyFrom(input: intellij)
+    }
+
+    public init(
+        from vsCode: VSCodeSnippet
+    ) throws {
+        IDECodeSnippetTitle = vsCode.name
+        IDECodeSnippetSummary = vsCode.content.description
+        IDECodeSnippetCompletionPrefix = vsCode.content.prefix
+        IDECodeSnippetContents = ""
+        IDECodeSnippetContents = try bodyFrom(input: vsCode)
     }
 
     public func output() -> String {

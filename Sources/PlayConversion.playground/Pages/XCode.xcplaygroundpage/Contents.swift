@@ -34,6 +34,6 @@ let plist = """
     """
 
 let xcode = try XCodeSnippet.init(plist: plist)
-let vscode = VSCodeSnippet(from: xcode)
+let vscode = try VSCodeSnippet(from: xcode)
 print(vscode.output())
 print(xcode.output())

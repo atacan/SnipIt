@@ -3,5 +3,6 @@
     <pages>
         <page name='JetBrains'/>
         <page name='XCode'/>
+        <page name='VSCode'/>
     </pages>
 </playground>
