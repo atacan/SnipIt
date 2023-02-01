@@ -93,7 +93,7 @@ public func parseJSONCSnippetFile(input: String) throws -> [VSCodeSnippet] {
     return snippets
 }
 
-/// A function that removes commentes from JSONC files
+/// A function that removes comments from JSONC files
 public func removeCommentsFromJSONC(input: String) -> String {
     input
         .components(separatedBy: .newlines)
